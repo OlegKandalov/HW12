@@ -3,9 +3,21 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class InfoAboutText {
-    public static void main(String[] args) {
-        String allText = getResourceFileAsString("Data");
-        String specialWords = getResourceFileAsString("Special-words");
+
+    public static void show() {
+        System.out.println("the number of all words in the text - "
+                + getNumberOfAllWords("Data"));
+
+        System.out.println("list without special words and" +
+                " without words shorter than 3 characters - "
+                + withoutSpecialWords("Special-words"));
+
+        System.out.println("an array of special words and their number - " +
+                Arrays.toString(withoutNormalWords("Special-words")) + " " +
+                Arrays.toString(withoutNormalWords("Special-words")).length());
+
+        System.out.println("popular words - " + valueComparator(4));
+
 
     }
 
@@ -58,15 +70,21 @@ public class InfoAboutText {
     public static List<String> valueComparator(int n) {
         List<String> list = Arrays.asList(getArrayFromString());
         List<String> result = new ArrayList<>();
+        Map<String, Integer> dd = new HashMap<>();
         for (String word : list) {
-            result.add("Слово " + word + " повторяется " + Collections.frequency(list, word));
+            dd.put(word, Collections.frequency(list, word));
         }
-        List<String> f = result
+        List<Map.Entry<String, Integer>> f = dd.entrySet()
                 .stream()
-                .distinct()
-                .limit(n)
+                .sorted((x, y) -> y.getValue().compareTo(x.getValue()))
                 .collect(Collectors.toList());
-        Collections.sort(f);
-        return f;
+
+        List<String> input = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            input.add(f.get(i).getKey() + " "
+                    + Collections.frequency(list, f.get(i).getKey()) + " reps");
+        }
+        return input;
     }
 }
