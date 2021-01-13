@@ -3,22 +3,22 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class InfoAboutText {
+    final static String fullText = getResourceFileAsString("Data");
+    final static String specialWords = getResourceFileAsString("Special-words");
 
     public static void show() {
         System.out.println("the number of all words in the text - "
-                + getNumberOfAllWords("Data"));
+                + getNumberOfAllWords());
 
         System.out.println("list without special words and" +
                 " without words shorter than 3 characters - "
-                + withoutSpecialWords("Special-words"));
+                + withoutSpecialWords(specialWords));
 
         System.out.println("an array of special words and their number - " +
-                Arrays.toString(withoutNormalWords("Special-words")) + " " +
-                Arrays.toString(withoutNormalWords("Special-words")).length());
+                Arrays.toString(withoutNormalWords(specialWords)) + " " +
+                Arrays.toString(withoutNormalWords(specialWords)).length());
 
         System.out.println("popular words - " + valueComparator(4));
-
-
     }
 
     public static String getResourceFileAsString(String fileName) {
@@ -31,16 +31,17 @@ public class InfoAboutText {
     }
 
     public static String[] getArrayFromString() {
-        return Objects.requireNonNull(getResourceFileAsString("Data"))
+        assert fullText != null;
+        return fullText
                 .replaceAll("[,()!'.]", "").split(" ");
     }
 
-    public static int getNumberOfAllWords(final String text) {
+    public static int getNumberOfAllWords() {
         return getArrayFromString().length;
     }
 
     public static List<String> withoutSpecialWords(String specialWords) {
-        List<String> fullText = Arrays.asList(getArrayFromString());
+        String[] fullText = getArrayFromString();
         List<String> onlyNormalWords = new LinkedList<>();
         for (String word : fullText) {
             if (specialWords.contains(word) || word.length() < 3) {
@@ -53,7 +54,7 @@ public class InfoAboutText {
     }
 
     public static String[] withoutNormalWords(String specialWords) {
-        List<String> fullText = Arrays.asList(getArrayFromString());
+        String[] fullText = getArrayFromString();
         List<String> listSpecialWords = new LinkedList<>();
         for (String word : fullText) {
             if (specialWords.contains(word) || word.length() < 3) {
@@ -69,7 +70,6 @@ public class InfoAboutText {
 
     public static List<String> valueComparator(int n) {
         List<String> list = Arrays.asList(getArrayFromString());
-        List<String> result = new ArrayList<>();
         Map<String, Integer> dd = new HashMap<>();
         for (String word : list) {
             dd.put(word, Collections.frequency(list, word));
